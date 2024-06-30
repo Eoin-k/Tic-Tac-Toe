@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    box-sizing:border-box;
+}
+
+.box{
+    border: 1px solid black;
+    min-width: 4rem;
+    min-height: 6rem;
+}
+
+.gameboard-wrapper{
+    display: grid;;
+    grid-template-columns: repeat(3,1fr);
+    margin: 20% auto;
+    width: 100%;
+    max-width: 400px;
+
+}
