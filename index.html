@@ -7,24 +7,34 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <section>
+    <section class="main-body">
         <div class="controls">
+            <div class="controls-inner">
             <div class="names-wrapper">
+                <div class="form-wrapper">
                 <label for="player1-name">Player 1 Name:</label>
                 <input id="player1-name" type="text">
+                </div>
+                <div class="form-wrapper">
                 <label for="player2-name">Player 2 Name:</label>
                 <input id="player2-name" type="text">
+                </div>
             </div>
             <div class="buttons-wrapper">
-                <button id="start-game">Start Game</button>
-                <button style="display:none;" id="restart-game">Restart Game</button>
+                <button class="btn-primary" id="start-game">Start Game</button>
+                <button class="btn-secondary" style="display:none;" id="restart-game">Restart Game</button>
             </div>
-            <div id="turn" class="turn"></div>
         </div>
+            <div id="turn" class="turn">Ready to start?</div>
+            
+        </div>
+        <div class="right-container">
+            
         <div id="gameboard-wrapper" class="gameboard-wrapper">
-
         </div>
+    </div>
     </section>
     <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
 </body>
 </html>
