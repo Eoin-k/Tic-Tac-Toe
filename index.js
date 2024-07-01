@@ -1,21 +1,27 @@
 const gameArea = document.getElementById("gameboard-wrapper");
 let boxes = document.getElementsByClassName("box");
-const abortController = new AbortController();
+const player1Name = document.getElementById("player1-name");
+const player2Name = document.getElementById("player2-name");
+const startGame = document.getElementById("start-game");
+const restart = document.getElementById("restart-game");
+const currentTurn = document.getElementById("turn");
+
 let player1 = {
-	name: "Thomas",
+	name: "Player 1",
 	token: "X",
 };
 let player2 = {
-	name: "Johnny",
+	name: "Player 2",
 	token: "O",
 };
 let currentoken = player2.token;
 let currentPlayer = player2.name;
-let gametiles = ["", "", "", "", "", "", "", "", ""];
 let player1Moves = [];
 let player2Moves = [];
+let gameover = false;
 
 const gameBoard = () => {
+	let gametiles = ["", "", "", "", "", "", "", "", ""];
 	const createBoard = (gametiles) => {
 		let count = 1;
 		gametiles.forEach((item) => {
@@ -24,6 +30,16 @@ const gameBoard = () => {
 		});
 	};
 	createBoard(gametiles);
+	game();
+	restart.style.display = "flex";
+	player1.name =
+		player1Name.value !== "" ? player1Name.value.toString() : player1.name;
+	player2.name =
+		player2Name.value !== "" ? player2Name.value.toString() : player2.name;
+	currentPlayer = player2.name;
+	currentoken = player2.token;
+	currentTurn.textContent = `It's currently ${currentPlayer}'s`;
+	startGame.disabled = true;
 };
 
 const game = () => {
@@ -37,62 +53,71 @@ const game = () => {
 		[1, 5, 9],
 		[3, 5, 7],
 	];
-const checkWinner = (player1Moves,player2Moves) =>{
-    player1Moves.sort((a,b) => a-b)
-    player2Moves.sort((a,b) => a-b)
-    for (let condition of winningconditions) {
-        console.log(player1Moves + "moves + " + condition)
-        if(player1Moves.sort().toString() == condition.toString()){
-            alert(`${player1.name} wins this one`)
-            boxes.disabled = true;
-            return
-        }
-        if(player2Moves.sort().toString() == condition.toString()){
-            alert(`${player2.name} wins this round`);
-            return
-        }
-    }
-}
-  const addListener = () => {
-    for (let box of boxes) {
-        box.addEventListener("click", () => {
-            if (box.innerHTML === "" && currentPlayer === player1.name) {
-                box.innerHTML = currentoken + currentPlayer;
-                player1Moves.push(box.id);
-                console.log(player1Moves);
-                players();
-                checkWinner(player1Moves,player2Moves);
-            }
-            if (box.innerHTML === "" && currentPlayer === player2.name) {
-                console.log(currentPlayer + "Hi");
-                box.innerHTML = currentoken + currentPlayer;
-                player2Moves.push(box.id);
-                players();
-                checkWinner(player1Moves,player2Moves);
-            }
-        });
-    }
-    
- }
+	const checkWinner = (player1Moves, player2Moves) => {
+		
+		player2Moves.sort((a, b) => a - b);
+		for (let condition of winningconditions) {
+            console.log(condition.toString() )
+            console.log(player1Moves.toString())
+			if (player1Moves.includes(condition.toString()) == true) {
+				alert(`${player1.name} wins this one`);
+				gameover = true;
+				return;
+			}
+			if (player2Moves.toString().includes(condition.toString())) {
+				alert(`${player2.name} wins this round`);
+				gameover = true;
+				return;
+			}
+			if (
+				(player1Moves.length == 5 && player2Moves.length == 4) ||
+				(player1Moves.length == 4 && player2Moves.length == 5)
+			) {
+				alert("its a draw");
+				gameover = true;
+				return;
+			}
+		}
+	};
+	const addListener = () => {
+		for (let box of boxes) {
+			box.addEventListener("click", () => {
+				if (gameover == true) {
+					return;
+				}
+				if (box.innerHTML === "" && currentPlayer === player1.name) {
+					box.innerHTML = currentoken + currentPlayer;
+					player1Moves.push(box.id);
+                    player1Moves.sort((a, b) => a - b);
+					console.log(player1Moves);
+					players();
+					checkWinner(player1Moves, player2Moves);
+				}
+				if (box.innerHTML === "" && currentPlayer === player2.name) {
+					console.log(currentPlayer + "Hi");
+					box.innerHTML = currentoken + currentPlayer;
+					player2Moves.push(box.id);
+					players();
+					checkWinner(player1Moves, player2Moves);
+				}
+			});
+		}
+	};
 	addListener();
 };
 
 const players = () => {
 	currentoken = currentoken === player1.token ? player2.token : player1.token;
 	currentPlayer = currentPlayer === player1.name ? player2.name : player1.name;
+	currentTurn.textContent = currentPlayer;
 };
-
 const resetGame = () => {
-    player1Moves = [];
-	 player2Moves = [];
-    for(let box of boxes) {
-        box.innerHTML = ""
-    };
-     
-}
-
-
-
-gameBoard();
-game();
-players();
+	player1Moves = [];
+	player2Moves = [];
+	for (let box of boxes) {
+		box.innerHTML = "";
+	}
+	gameover = false;
+};
+startGame.addEventListener("click", gameBoard);
+restart.addEventListener("click", resetGame);
