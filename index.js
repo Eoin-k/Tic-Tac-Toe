@@ -20,6 +20,10 @@ let player1Moves = [];
 let player2Moves = [];
 let gameover = false;
 
+function arrayContainsArray(playerArray, condition) {
+	return condition.every((value) => playerArray.includes(value));
+}
+
 const gameBoard = () => {
 	let gametiles = ["", "", "", "", "", "", "", "", ""];
 	const createBoard = (gametiles) => {
@@ -31,6 +35,7 @@ const gameBoard = () => {
 	};
 	createBoard(gametiles);
 	game();
+	
 	restart.style.display = "flex";
 	player1.name =
 		player1Name.value !== "" ? player1Name.value.toString() : player1.name;
@@ -53,18 +58,15 @@ const game = () => {
 		[1, 5, 9],
 		[3, 5, 7],
 	];
+
 	const checkWinner = (player1Moves, player2Moves) => {
-		
-		player2Moves.sort((a, b) => a - b);
 		for (let condition of winningconditions) {
-            console.log(condition.toString() )
-            console.log(player1Moves.toString())
-			if (player1Moves.includes(condition.toString()) == true) {
+			if (arrayContainsArray(player1Moves, condition)) {
 				alert(`${player1.name} wins this one`);
 				gameover = true;
 				return;
 			}
-			if (player2Moves.toString().includes(condition.toString())) {
+			if (arrayContainsArray(player2Moves, condition)) {
 				alert(`${player2.name} wins this round`);
 				gameover = true;
 				return;
@@ -87,18 +89,15 @@ const game = () => {
 				}
 				if (box.innerHTML === "" && currentPlayer === player1.name) {
 					box.innerHTML = currentoken + currentPlayer;
-					player1Moves.push(box.id);
-                    player1Moves.sort((a, b) => a - b);
-					console.log(player1Moves);
-					players();
+					player1Moves.push(Number(box.id));
 					checkWinner(player1Moves, player2Moves);
+					players();
 				}
 				if (box.innerHTML === "" && currentPlayer === player2.name) {
-					console.log(currentPlayer + "Hi");
 					box.innerHTML = currentoken + currentPlayer;
-					player2Moves.push(box.id);
-					players();
+					player2Moves.push(Number(box.id));
 					checkWinner(player1Moves, player2Moves);
+					players();
 				}
 			});
 		}
